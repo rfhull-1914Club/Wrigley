@@ -1,0 +1,794 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Sun, MapPin, HeartPulse, DollarSign, Home, FileText, 
+  ShieldCheck, AlertTriangle, CheckCircle, Menu, X, 
+  Landmark, Car, ChevronRight, Info, Calculator, Globe, 
+  ArrowRightCircle, PlusCircle, BookOpen, ExternalLink
+} from 'lucide-react';
+
+// --- Deep Content Extracted Exclusively from Notebook with EXPANDED detail text ---
+const contentData = [
+  {
+    id: 'culture',
+    title: 'Culture & Lifestyle',
+    tagline: 'The Gold Standard of Retirement',
+    icon: <Sun className="w-6 h-6" />,
+    intro: "Panama is globally recognized as a top-tier retirement haven. It offers an unparalleled blend of vibrant local culture, deep economic stability, and incredibly diverse landscapes—all within a short flight from the US and operating on the US Dollar.",
+    details: [
+      { 
+        title: "Diverse Locales", 
+        text: "Choose the cosmopolitan buzz of Panama City, the cool eternal spring of Boquete, or the laid-back beach life in Coronado or Bocas del Toro.",
+        expandedText: "Panama City offers a Miami-like skyline with world-class dining, theater, and nightlife. If you prefer cooler weather, the Chiriquí highlands (Boquete, Volcán, Tierras Altas) offer 'eternal spring' temperatures (70s°F year-round) and a large established expat community. For beach lovers, the Pacific Riviera (Coronado, San Carlos) provides resort-style living just an hour from the capital, while Bocas del Toro offers a laid-back, surfing, and eco-friendly Caribbean island vibe."
+      },
+      { 
+        title: "Economic Stability", 
+        text: "Anchored by the Panama Canal and a robust banking sector, the economy provides a safe harbor for expats and their investments.",
+        expandedText: "Panama's high level of safety and economic security is a direct product of its political stability and strong ties to the United States. The economy is heavily buoyed by the revenues of the Panama Canal and its status as an international banking hub. Because Panama uses the US Dollar (the Balboa is pegged 1:1), American retirees face zero currency exchange risk or devaluation of their pensions."
+      },
+      { 
+        title: "Safety First", 
+        text: "Panama consistently ranks as one of the safest countries in Latin America with strong democratic ties to the US.",
+        expandedText: "Panama is widely known as one of the safest countries in Latin America to live and retire. While petty theft can occur in crowded areas (as with any global destination), violent crime against tourists and expats is rare. The country is geographically positioned south of the hurricane belt, making it incredibly safe from major natural weather disasters compared to Caribbean islands or Florida."
+      }
+    ],
+    deepDive: "Panama offers a unique blend of tradition and modernity. You can enjoy high-speed internet (even Starlink in remote areas like Bocas) while living steps away from pristine rainforests. The local people are famously welcoming, provided you respect their customs.",
+    challenge: "Navigating 'Panama Time' & Cultural Etiquette",
+    challengeDesc: "Expats often experience friction by applying North American expectations to scheduling. Time has a more relaxed rhythm here. Furthermore, typical US-style directness in communication is often perceived as rude.",
+    mitigation: "Adopt a patient mindset and embrace the slower pace. Crucially, always use proper greetings. Never walk up to a desk or enter a room without first saying 'Buenos dias' or 'Buenas tardes'. This simple sign of respect instantly changes how locals respond to you.",
+    referenceLinks: [
+      { name: "How to Be Polite to the Local Panamanian People | Retire In Panama", url: "https://www.retireinpanamatours.com/post/how-to-be-polite-to-the-local-panamanian-people/" },
+      { name: "Cultural Differences Expats Should Understand Before Moving to Panama", url: "https://glpinternationalsales.com/cultural-differences-expats-should-understand-before-moving-to-panama/" },
+      { name: "Is Panama Safe?: A Local's Crime and Health Safety Guide", url: "https://solbungalowsbocas.com/panama-safety/" }
+    ]
+  },
+  {
+    id: 'visas',
+    title: 'Visas & Residency',
+    tagline: 'The World\'s Best Retiree Program',
+    icon: <FileText className="w-6 h-6" />,
+    intro: "Panama actively incentivizes your arrival. The Pensionado (Retiree) Visa is widely considered the best in the world, granting permanent residency and a suite of nationwide discounts that drastically lower your living costs.",
+    details: [
+      { 
+        title: "Income Requirement", 
+        text: "You only need a verifiable lifetime monthly pension of $1,000. Drops to $750/mo if you buy a $100k+ property.",
+        expandedText: "To qualify for the Pensionado Visa, your $1,000/month income must be a guaranteed lifetime pension. This can come from Social Security, a military pension, or a regulated corporate retirement company. You will need heavily authenticated proof, such as an apostilled letter from the paying agency. If you decide to purchase Panamanian real estate valued at over $100,000, the monthly income requirement drops to just $750."
+      },
+      { 
+        title: "Dependents", 
+        text: "Spouses can be added for an additional $250/month in proven income.",
+        expandedText: "If you are bringing your spouse, your guaranteed pension must be at least $1,250 per month ($1,000 for you + $250 for your dependent). You will also be required to provide an apostilled, authenticated copy of your marriage certificate to the Panamanian immigration authorities."
+      },
+      { 
+        title: "Incredible Discounts", 
+        text: "Enjoy by law: 25% off utility bills, 25% off airline tickets, 50% off movies, and 20% off doctors.",
+        expandedText: "Panamanian Law 9 grants Pensionados incredible nationwide discounts. This isn't just a marketing gimmick; it's the law. Benefits include 50% off entertainment (movies, concerts, sporting events), 30% off bus, boat, and train fares, 25% off airline tickets, 25% off monthly energy bills, 20% off doctor's consultations, 15% off hospital bills, and 10% off prescription medicines."
+      },
+      { 
+        title: "Alternative Visas", 
+        text: "Don't have a pension? The Qualified Investor Visa grants immediate permanent residency for a $300,000 real estate investment.",
+        expandedText: "If you aren't yet collecting a pension, Panama offers excellent alternatives. The Qualified Investor Visa (Golden Visa) gives you immediate permanent residency for a $300,000 real estate investment. Alternatively, the Friendly Nations Visa allows citizens of certain countries (including the US and Canada) to gain residency by purchasing a $200,000 property or by proving employment in Panama."
+      }
+    ],
+    deepDive: "You are also entitled to a one-time duty exemption of up to $10,000 on the importation of your household goods, making shipping your life over much more affordable.",
+    challenge: "Bureaucratic Opacity & Paperwork",
+    challengeDesc: "The Panamanian immigration process is heavily paper-based. FBI background checks, apostilled birth and marriage certificates, and bank letters must be perfectly prepared. Government offices can move slowly.",
+    mitigation: "Never attempt a DIY visa application. By law, you must use a Panamanian immigration attorney. Hire a reputable, specialized relocation lawyer to review your documents before you leave your home country to prevent costly delays.",
+    referenceLinks: [
+      { name: "Pensionado Visa Panama: Complete Guide - Global Citizen Solutions", url: "https://www.globalcitizensolutions.com/" },
+      { name: "Panama Friendly Nations Visa: Requirements & Benefits - Nomad Capitalist", url: "https://nomadcapitalist.com/" },
+      { name: "Panama Retiree and Pensioner Visa Overview", url: "https://kraemerlaw.com/en/panama-retiree-and-pensioner-visa/" }
+    ]
+  },
+  {
+    id: 'costofliving',
+    title: 'Cost of Living',
+    tagline: 'Stretch Your Retirement Dollars',
+    icon: <DollarSign className="w-6 h-6" />,
+    intro: "Your money goes 30% to 50% further here than in major US cities. Whether you want to live frugally in a rural town or enjoy luxury high-rise living in the capital, Panama accommodates a wide spectrum of budgets.",
+    details: [
+      { 
+        title: "Housing", 
+        text: "A 2-bedroom home in Boquete is ~$800/mo. A modern Panama City condo might run $1,000-$1,500/mo.",
+        expandedText: "Housing costs vary drastically by location. Inside the 'expat bubble', such as Coronado or premium high-rises in Panama City, expect to pay $1,000 to $2,500+ for nice accommodations. However, in the Chiriquí highlands (like Boquete) or interior towns, lovely 2-bedroom homes with yards can easily be found starting around $800 a month."
+      },
+      { 
+        title: "Utilities", 
+        text: "Water and internet are cheap. Electricity is the wild card, heavily dependent on your air conditioning usage.",
+        expandedText: "Water and trash service is usually incredibly cheap, often ranging from $10 to $20 a month. High-speed internet and cellular data are also highly affordable. The major variable is electricity. Since Panama is tropical, heavy air-conditioning use can push electric bills over $150-$200/month. Remember, if you have a Pensionado Visa, you get an automatic 25% discount on your energy bill!"
+      },
+      { 
+        title: "Dining & Food", 
+        text: "Local restaurant meals often cost $6–$12 per person. A mid-range dinner for two is typically $30–$60.",
+        expandedText: "Eating at local 'Fondas' (traditional cafeterias) will score you a massive, hearty meal of chicken, rice, beans, and salad for under $6. Fine dining in Panama City matches global standards but remains 30% cheaper than New York or LA. However, if you insist on buying imported American grocery brands (like specific cereals or snacks), expect to pay a high premium."
+      }
+    ],
+    deepDive: "While imported American grocery brands carry a premium, embracing local produce, meats, and markets will drastically reduce your monthly food expenditures.",
+    challenge: "The 'Expat Bubble' Premium",
+    challengeDesc: "Living in highly concentrated expat enclaves (like gated communities in Coronado or high-end towers in Panama City) will drive your budget up closer to US levels.",
+    mitigation: "To maximize savings, look slightly outside the bubble to interior towns like Penonomé, Chitré, Las Tablas, or Dolega, where costs are 30-50% lower. Always rent for 6-12 months before buying to test the neighborhood.",
+    referenceLinks: [
+      { name: "Cost of Living in Panama: An Example Table of Expenses - International Living", url: "https://internationalliving.com/" },
+      { name: "How much money do you need to retire in Panama now? - TheLatinvestor", url: "https://thelatinvestor.com/" },
+      { name: "Panama Utilities & Electricity Costs: What Expats Need to Know", url: "https://www.relofirm.com/" }
+    ]
+  },
+  {
+    id: 'realestate',
+    title: 'Real Estate',
+    tagline: 'Strong Rights for Foreign Buyers',
+    icon: <Home className="w-6 h-6" />,
+    intro: "Panama offers one of the most foreign-friendly property markets in Latin America. Foreigners possess the exact same constitutional property rights as Panamanian citizens, with no restrictions on repatriating capital.",
+    details: [
+      { 
+        title: "Market Variety", 
+        text: "Options range from beachfront condos on the Pacific Riviera to mountain estates and urban apartments.",
+        expandedText: "The market is diverse. You can invest in pre-construction high-rises in Panama City neighborhoods like Costa del Este or Punta Pacifica. For resort living, Buenaventura on the Pacific Riviera offers world-class golf and beaches. For cooler climates, properties in Boquete or Volcán range from gated communities to private mountain farms."
+      },
+      { 
+        title: "Taxes & Fees", 
+        text: "Expect a 2% transfer tax when purchasing. Property taxes overall are remarkably low compared to the US.",
+        expandedText: "When buying property, closing costs typically run around 2% for the transfer tax and 3% for advance capital gains tax. Ongoing property taxes are very favorable; primary residences enjoy a tax exemption on the first $120,000 of value, with rates maxing out at just 0.7% on values above $700,000. New constructions often come with long-term property tax exemptions."
+      },
+      { 
+        title: "Public Registry", 
+        text: "Ownership of titled land is safely recorded in a centralized, modernized Public Registry.",
+        expandedText: "Unlike some emerging markets, Panama has a highly modernized, centralized, and digital Public Registry. This ensures that when you buy 'Titled' property, your ownership is absolute, verifiable, and protected by the Panamanian constitution with exactly the same rights afforded to local citizens."
+      }
+    ],
+    deepDive: "You do not need to be a resident to buy property in Panama. Many expats purchase their retirement home years in advance as an investment or rental property before making the full move.",
+    challenge: "Right of Possession (ROP) Land",
+    challengeDesc: "Not all land is 'Titled'. Some is sold as 'Right of Possession' (ROP), meaning the government owns the land and you only buy the right to use it. This carries massive legal risks and cannot be mortgaged.",
+    mitigation: "Strictly avoid ROP properties unless you are a highly experienced local investor. Only buy fully Titled property. Always retain an independent Panamanian real estate attorney to verify title, handle escrow, and check for hidden easements.",
+    referenceLinks: [
+      { name: "Buying Property in Panama: Legal Guide for Foreigners", url: "https://www.relofirm.com/buying-property-in-panama/" },
+      { name: "Title vs. ROP: Understanding Property Rights - Casa Solution", url: "https://casasolution.com/" },
+      { name: "Is It Safe to Buy Property in Panama? What Buyers Need to Know", url: "https://panamacoastalrealestate.com/" }
+    ]
+  },
+  {
+    id: 'healthcare',
+    title: 'Healthcare & Medicare',
+    tagline: 'World-Class Care at a Fraction of the Cost',
+    icon: <HeartPulse className="w-6 h-6" />,
+    intro: "Panama’s private healthcare system is exceptional. In hubs like Panama City and David, you will find ultra-modern hospitals staffed by English-speaking, internationally trained specialists—often at up to 70% less than US prices.",
+    details: [
+      { 
+        title: "Affordability", 
+        text: "Routine doctor visits can cost as little as $20-$50 out of pocket. Many expats simply pay cash for routine care.",
+        expandedText: "Because costs are so low, many expats choose to 'self-insure' for day-to-day medical needs. A consultation with an English-speaking specialist (like a cardiologist) often costs between $50 and $80. Dental cleanings and routine lab work are equally inexpensive, meaning you can often pay out of pocket without breaking the bank."
+      },
+      { 
+        title: "Private Insurance", 
+        text: "Local and international private health insurance plans are readily available and highly affordable.",
+        expandedText: "If you prefer to be fully covered, major providers like MAPFRE offer excellent local health insurance plans. Monthly premiums are heavily dependent on age but are vastly cheaper than US counterparts. For those who travel often, international brokers like Pacific Prime can set you up with global health plans that cover you in Panama, the US, and worldwide."
+      },
+      { 
+        title: "Public System", 
+        text: "Panama has public systems (MINSA and CSS), but expats predominantly use the private sector.",
+        expandedText: "Panama's public healthcare is managed by the Ministry of Health (MINSA) and Social Security (CSS). While incredibly cheap (sometimes just a few dollars a visit), the public system is strained. Expats generally avoid it due to long wait times, lack of modern amenities, and a lower likelihood of finding English-speaking staff."
+      }
+    ],
+    deepDive: "Many top doctors in Panama City are affiliated with major US hospitals (like Johns Hopkins) and boast board certifications from the United States.",
+    challenge: "The Medicare Gap",
+    challengeDesc: "Traditional US Medicare (Parts A & B) stops at the border. It will not cover your routine care or hospital stays while you are living as an expat in Panama.",
+    mitigation: "Do not rely on standard Medicare. Instead, work with an expat insurance specialist to switch to a Medicare Advantage plan that includes global urgent and emergency care coverage. Pair this with a local private plan for routine needs.",
+    referenceLinks: [
+      { name: "Navigating Medicare as a U.S. Expat in Panama - Newsroom Panama", url: "https://newsroompanama.com/" },
+      { name: "Health Insurance for American Expats in Panama - Pacific Prime", url: "https://www.pacificprime.com/" },
+      { name: "Travel outside the U.S. - Medicare Official Guidelines", url: "https://www.medicare.gov/coverage/travel-outside-the-u.s." }
+    ]
+  },
+  {
+    id: 'taxes',
+    title: 'Taxes & Compliance',
+    tagline: 'Territorial Taxation Advantages',
+    icon: <Landmark className="w-6 h-6" />,
+    intro: "Panama operates on a 'Territorial Tax System.' This is a massive financial boon for expats, meaning Panama only taxes income generated within its borders.",
+    details: [
+      { 
+        title: "Zero Tax on US Income", 
+        text: "Your US Social Security, pensions, 401(k) distributions, and foreign investment income are 100% tax-free in Panama.",
+        expandedText: "Because of Panama's territorial tax code, if your money is earned outside of Panama, Panama will not tax it. This means your retirement pensions, US-based business income, rental income from properties in the US, and stock market dividends remain completely untaxed by the Panamanian government."
+      },
+      { 
+        title: "Corporate Structures", 
+        text: "It is simple and cost-effective to set up a Panamanian Corporation or Foundation to manage assets.",
+        expandedText: "Panama is world-renowned for its asset protection vehicles. Expats frequently use Panamanian Corporations (Sociedad Anónima) or Private Interest Foundations to hold title to their real estate or manage offshore businesses. These structures offer robust privacy and ease of estate planning."
+      },
+      { 
+        title: "Bank Accounts", 
+        text: "Expats can open local bank accounts, though the compliance paperwork is thorough.",
+        expandedText: "Opening a bank account in Panama is entirely possible but requires patience. Due to strict international banking and anti-money laundering regulations, you will be required to provide extensive 'Know Your Customer' (KYC) documents, including bank reference letters, tax returns, and proof of income sources."
+      }
+    ],
+    deepDive: "Because Panama uses the US Dollar, you completely avoid the currency exchange risk and fluctuation that plagues expats in other Latin American countries.",
+    challenge: "Ongoing US Tax Obligations",
+    challengeDesc: "Moving to a tax-haven like Panama does not sever your ties to the IRS. The US taxes based on citizenship, meaning you must still file annual tax returns regardless of where you live.",
+    mitigation: "Stay strictly compliant. You must file an FBAR if your foreign bank accounts exceed $10,000 at any time, and report assets under FATCA (Form 8938). Hire a specialized US Expat CPA to utilize the Foreign Earned Income Exclusion and avoid heavy penalties.",
+    referenceLinks: [
+      { name: "A US Citizen's Guide to Panama's Territorial Tax System", url: "https://pacificlegal.ca/" },
+      { name: "Taxes for US Expats Living in Panama - Greenback Tax Services", url: "https://www.greenbacktaxservices.com/" },
+      { name: "Understanding FBAR & FATCA: What Every U.S. Expat Needs to Know", url: "https://www.vernitaxlaw.com/" }
+    ]
+  },
+  {
+    id: 'driving',
+    title: 'Transportation',
+    tagline: 'Navigating the Isthmus',
+    icon: <Car className="w-6 h-6" />,
+    intro: "Panama features the best infrastructure in Central America, including the Pan-American Highway connecting the country and a modern Metro system in the capital.",
+    details: [
+      { 
+        title: "Tourist Driving", 
+        text: "You can legally drive using your US or Canadian driver's license for up to 90 days after entry.",
+        expandedText: "When you first arrive on a tourist stamp, your home country's driver's license is perfectly valid for 90 days. Renting a car is easy and affordable. However, do not overstay this 90-day limit without transitioning your license, as traffic police conduct frequent checkpoints."
+      },
+      { 
+        title: "Public Transit", 
+        text: "Taxis, Ubers, and cross-country buses are incredibly cheap, reliable, and popular among expats.",
+        expandedText: "Many expats in Panama City choose not to own a car at all. The Metro (subway) is clean, modern, and costs less than $1 per ride. Uber is ubiquitous and very cheap (often $3-$6 for city rides). For exploring the country, luxury air-conditioned double-decker buses run frequently between Panama City and David."
+      },
+      { 
+        title: "Modernization", 
+        text: "Panama is rolling out highly secure driver's licenses featuring QR codes to streamline traffic enforcement.",
+        expandedText: "As of late 2025, the transit authority (ATTT) and Sertracen are issuing new, highly secure driver's licenses with embedded QR codes. This modernization helps prevent fraud and ensures a smoother process at police checkpoints."
+      }
+    ],
+    deepDive: "A car is necessary in mountain towns like Boquete or beach areas like Coronado, but in Panama City, many expats rely entirely on Uber and the Metro to avoid heavy traffic.",
+    challenge: "License Transition & Age Restrictions",
+    challengeDesc: "Once you receive your temporary residency card, your foreign license is immediately invalid. If caught, your vehicle can be impounded. Furthermore, drivers aged 70+ must jump through extra hoops.",
+    mitigation: "Apply for a Panamanian license immediately upon getting residency (involves authenticating your home license). If you are 70 or older, be prepared to renew your license every 2 years, which requires a medical certificate from a specialist in internal medicine or geriatrics.",
+    referenceLinks: [
+      { name: "How To Get A Panama Driver's License - International Relocation Firm", url: "https://www.relofirm.com/" },
+      { name: "When Can You Get Your New Drivers License in Panama", url: "https://expat-tations.com/law/new-drivers-license-in-panama/" },
+      { name: "License Extension & Appointments - Sertracen Panamá (Official Portal)", url: "https://www.licencia.com.pa" }
+    ]
+  },
+  {
+    id: 'resources',
+    title: 'Essential Resources',
+    tagline: 'Official Channels & Directories',
+    icon: <BookOpen className="w-6 h-6" />,
+    intro: "Navigating a new country is much easier when you know exactly where to look. We have curated a directory of essential Panamanian government agencies, health networks, and official services frequently utilized by expats.",
+    details: [
+      {
+        title: "Transportation & Driving",
+        text: "Links to the Panamanian transit authority and the official license issuer.",
+        expandedText: "For all driving-related needs, you will interact with the ATTT (Autoridad del Tránsito y Transporte Terrestre) and Sertracen. Sertracen handles the actual issuance and renewal of licenses. To get an appointment for a license extension or renewal, you must book through their official portal at licencia.com.pa."
+      },
+      {
+        title: "Government & Legal Entities",
+        text: "Links to the tax authority (DGI), the Public Registry, and the Electoral Tribunal.",
+        expandedText: "When buying property, your lawyer will interact with the Registro Público de Panamá (Public Registry). For property taxes and business taxes, the governing body is the DGI (Dirección General de Ingresos). If you lose your residency card or need certain civic documents, you may be directed to the Tribunal Electoral (Electoral Tribunal)."
+      },
+      {
+        title: "Healthcare Systems",
+        text: "Information on the Ministry of Health and Social Security infrastructure.",
+        expandedText: "Public health in Panama is governed by two main bodies: MINSA (Ministry of Health) which operates public hospitals and clinics, and CSS (Caja de Seguro Social) which manages the social security healthcare network. Expats also frequently use private hospital networks like Hospital Punta Pacifica and Hospital Nacional."
+      },
+      {
+        title: "U.S. Embassy & State Dept",
+        text: "Official resources from the United States government for citizens abroad.",
+        expandedText: "It is highly recommended that all U.S. expats register with the STEP (Smart Traveler Enrollment Program) via travel.state.gov. The U.S. Embassy in Panama City provides notary services, passport renewals, and emergency assistance for American citizens residing in or visiting Panama."
+      }
+    ],
+    deepDive: "While official government websites are the best source of truth, keep in mind that almost all of them will be entirely in Spanish. Using a browser with built-in translation features (like Google Chrome) is highly recommended for navigating these portals.",
+    challenge: "Language Barriers & Portal Reliability",
+    challengeDesc: "Panamanian government websites can sometimes experience downtime, and finding the exact form or appointment portal you need in a secondary language can be frustrating.",
+    mitigation: "If a website isn't working, be patient and try again the next day. Better yet, for complex tasks like property registration, visa applications, or tax filing, rely on your bilingual Panamanian attorney or CPA rather than attempting to navigate the portals yourself.",
+    referenceLinks: [
+      { name: "U.S. Embassy in Panama - Official Website", url: "https://pa.usembassy.gov" },
+      { name: "Panama Travel Advisory - U.S. State Department", url: "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/panama-travel-advisory.html" },
+      { name: "Registro Público de Panamá (Public Registry)", url: "https://www.registro-publico.gob.pa" }
+    ]
+  }
+];
+
+// --- Interactive Budget Tool Component ---
+const BudgetEstimator = () => {
+  const [lifestyle, setLifestyle] = useState('moderate');
+
+  const budgets = {
+    frugal: { rent: 600, food: 350, utilities: 80, healthcare: 100, fun: 200, total: 1330 },
+    moderate: { rent: 1100, food: 500, utilities: 150, healthcare: 200, fun: 400, total: 2350 },
+    luxury: { rent: 2000, food: 800, utilities: 300, healthcare: 350, fun: 800, total: 4250 }
+  };
+
+  const current = budgets[lifestyle];
+
+  return (
+    <div className="bg-slate-50 rounded-xl p-6 border border-slate-200 mt-6 shadow-inner">
+      <div className="flex items-center mb-4">
+        <Calculator className="w-6 h-6 text-[#005293] mr-2" />
+        <h4 className="text-lg font-bold text-slate-800">Interactive Monthly Budget Estimator</h4>
+      </div>
+      <p className="text-sm text-slate-600 mb-6">Estimate your monthly costs for a couple based on your desired lifestyle in Panama.</p>
+      
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        {['frugal', 'moderate', 'luxury'].map((level) => (
+          <button
+            key={level}
+            onClick={() => setLifestyle(level)}
+            className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-all duration-300 capitalize ${
+              lifestyle === level 
+                ? 'bg-[#005293] text-white shadow-md transform scale-105' 
+                : 'bg-white text-slate-600 border border-slate-200 hover:bg-blue-50'
+            }`}
+          >
+            {level}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white p-3 rounded shadow-sm border border-slate-100">
+          <p className="text-xs text-slate-500 uppercase font-bold">Rent/Housing</p>
+          <p className="text-xl font-bold text-slate-800">${current.rent}</p>
+        </div>
+        <div className="bg-white p-3 rounded shadow-sm border border-slate-100">
+          <p className="text-xs text-slate-500 uppercase font-bold">Groceries & Dining</p>
+          <p className="text-xl font-bold text-slate-800">${current.food}</p>
+        </div>
+        <div className="bg-white p-3 rounded shadow-sm border border-slate-100">
+          <p className="text-xs text-slate-500 uppercase font-bold">Utilities (w/ AC)</p>
+          <p className="text-xl font-bold text-slate-800">${current.utilities}</p>
+        </div>
+        <div className="bg-white p-3 rounded shadow-sm border border-slate-100">
+          <p className="text-xs text-slate-500 uppercase font-bold">Healthcare</p>
+          <p className="text-xl font-bold text-slate-800">${current.healthcare}</p>
+        </div>
+        <div className="bg-white p-3 rounded shadow-sm border border-slate-100">
+          <p className="text-xs text-slate-500 uppercase font-bold">Entertainment</p>
+          <p className="text-xl font-bold text-slate-800">${current.fun}</p>
+        </div>
+        <div className="bg-[#CE1126] p-3 rounded shadow-md text-white flex flex-col justify-center">
+          <p className="text-xs text-red-100 uppercase font-bold">Estimated Total</p>
+          <p className="text-2xl font-bold">${current.total}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- Interactive Visa Eligibility Component ---
+const VisaCheck = () => {
+  const [hasPension, setHasPension] = useState(null);
+  const [pensionAmount, setPensionAmount] = useState(null);
+
+  const renderResult = () => {
+    if (hasPension === false) {
+      return (
+        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-slate-700 animate-fade-in-up">
+          <p><strong>Consider the Qualified Investor Visa:</strong> Since you don't have a lifetime pension, you can still obtain permanent residency by investing $300,000 in Panamanian real estate.</p>
+        </div>
+      );
+    }
+    if (hasPension === true && pensionAmount === 'high') {
+      return (
+        <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 animate-fade-in-up">
+          <CheckCircle className="w-5 h-5 inline mr-2 mb-1" />
+          <strong>You are fully eligible!</strong> With a guaranteed pension over $1,000/month, you qualify for the coveted Pensionado Visa and all its massive discounts.
+        </div>
+      );
+    }
+    if (hasPension === true && pensionAmount === 'low') {
+      return (
+        <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 animate-fade-in-up">
+          <Globe className="w-5 h-5 inline mr-2 mb-1" />
+          <strong>Partial Eligibility:</strong> Since your pension is between $750 and $999, you can still qualify for the Pensionado Visa <em>if</em> you purchase a Panamanian property worth at least $100,000.
+        </div>
+      );
+    }
+    if (hasPension === true && pensionAmount === 'none') {
+       return (
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 animate-fade-in-up">
+          Your pension must be at least $750/month (with a property purchase) to qualify for the Pensionado Visa.
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className="bg-white rounded-xl p-6 border border-slate-200 mt-6 shadow-sm">
+      <h4 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+        <CheckCircle className="w-5 h-5 text-[#005293] mr-2"/> Visa Eligibility Check
+      </h4>
+      
+      <div className="space-y-4">
+        <div>
+          <p className="font-semibold text-slate-700 mb-2">Do you have a guaranteed lifetime pension (e.g., Social Security, Military)?</p>
+          <div className="flex space-x-3">
+            <button onClick={() => { setHasPension(true); setPensionAmount(null); }} className={`px-4 py-2 rounded border transition-colors ${hasPension === true ? 'bg-[#005293] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-200'}`}>Yes</button>
+            <button onClick={() => { setHasPension(false); setPensionAmount(null); }} className={`px-4 py-2 rounded border transition-colors ${hasPension === false ? 'bg-[#005293] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-200'}`}>No</button>
+          </div>
+        </div>
+
+        {hasPension === true && (
+          <div className="animate-fade-in-up">
+            <p className="font-semibold text-slate-700 mb-2 mt-4">What is your monthly pension amount?</p>
+            <div className="flex flex-wrap gap-3">
+              <button onClick={() => setPensionAmount('high')} className={`px-4 py-2 rounded border transition-colors ${pensionAmount === 'high' ? 'bg-[#005293] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-200'}`}>$1,000 or more</button>
+              <button onClick={() => setPensionAmount('low')} className={`px-4 py-2 rounded border transition-colors ${pensionAmount === 'low' ? 'bg-[#005293] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-200'}`}>$750 to $999</button>
+              <button onClick={() => setPensionAmount('none')} className={`px-4 py-2 rounded border transition-colors ${pensionAmount === 'none' ? 'bg-[#005293] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-200'}`}>Under $750</button>
+            </div>
+          </div>
+        )}
+
+        {renderResult()}
+      </div>
+    </div>
+  );
+};
+
+// --- Resource Links Component ---
+const ResourceDirectory = () => {
+  const categories = [
+    {
+      title: "Transportation & Driving",
+      links: [
+        { name: "Sertracen Panamá (License Issuance & Appointments)", url: "https://www.licencia.com.pa" },
+        { name: "ATTT (Autoridad del Tránsito y Transporte Terrestre)", url: "https://www.transito.gob.pa" }
+      ]
+    },
+    {
+      title: "Government & Legal",
+      links: [
+        { name: "DGI (Dirección General de Ingresos) - Taxes", url: "https://dgi.mef.gob.pa" },
+        { name: "Registro Público de Panamá (Public Registry)", url: "https://www.registro-publico.gob.pa" },
+        { name: "Tribunal Electoral (Electoral Tribunal & ID)", url: "https://www.tribunal-electoral.gob.pa" }
+      ]
+    },
+    {
+      title: "Healthcare",
+      links: [
+        { name: "MINSA (Ministry of Health)", url: "https://www.minsa.gob.pa" },
+        { name: "CSS (Caja de Seguro Social)", url: "https://w3.css.gob.pa" }
+      ]
+    },
+    {
+      title: "U.S. Embassy & Travel",
+      links: [
+        { name: "U.S. Embassy in Panama", url: "https://pa.usembassy.gov" },
+        { name: "U.S. State Dept - Panama Travel Advisory", url: "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/panama-travel-advisory.html" }
+      ]
+    }
+  ];
+
+  return (
+    <div className="bg-slate-50 rounded-xl p-6 border border-slate-200 mt-6 shadow-sm">
+      <h4 className="text-xl font-bold text-[#005293] mb-6 flex items-center border-b border-slate-200 pb-3">
+        <BookOpen className="w-6 h-6 mr-3 text-[#CE1126]" /> 
+        Directory of Local Services
+      </h4>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {categories.map((cat, idx) => (
+          <div key={idx}>
+            <h5 className="font-bold text-slate-800 mb-3 uppercase tracking-wider text-sm">{cat.title}</h5>
+            <ul className="space-y-3">
+              {cat.links.map((link, lIdx) => (
+                <li key={lIdx}>
+                  <a 
+                    href={link.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-start text-slate-600 hover:text-[#005293] transition-colors group"
+                  >
+                    <ExternalLink className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-slate-400 group-hover:text-[#CE1126]" />
+                    <span className="font-medium">{link.name}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+// --- Main Application Component ---
+export default function PanamaRetirementApp() {
+  const [activeTab, setActiveTab] = useState(contentData[0].id);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [animateKey, setAnimateKey] = useState(0);
+  
+  // State for the expanded detail modal
+  const [selectedDetail, setSelectedDetail] = useState(null);
+
+  const activeContent = contentData.find(item => item.id === activeTab);
+
+  // Trigger animation re-render when tab changes
+  useEffect(() => {
+    setAnimateKey(prev => prev + 1);
+    setSelectedDetail(null); // Close any open modal if tab changes
+  }, [activeTab]);
+
+  return (
+    <div className="min-h-screen bg-slate-100 font-sans text-slate-800">
+      <style dangerouslySetInnerHTML={{__html: `
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(15px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      `}} />
+
+      {/* Detail Modal Overlay */}
+      {selectedDetail && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in"
+          onClick={() => setSelectedDetail(null)}
+        >
+          <div 
+            className="bg-white rounded-3xl shadow-2xl max-w-xl w-full overflow-hidden animate-fade-in-up" 
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-[#005293] to-blue-800 p-6 sm:p-8 flex justify-between items-start text-white relative">
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                 {activeContent.icon}
+              </div>
+              <div className="relative z-10">
+                <p className="text-blue-200 text-sm font-bold uppercase tracking-widest mb-1">{activeContent.title}</p>
+                <h3 className="text-2xl sm:text-3xl font-black">{selectedDetail.title}</h3>
+              </div>
+              <button 
+                onClick={() => setSelectedDetail(null)} 
+                className="text-white/70 hover:text-white transition-colors bg-white/10 hover:bg-white/20 p-2 rounded-full z-10"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            {/* Modal Body */}
+            <div className="p-6 sm:p-8">
+              <div className="flex items-start space-x-3 mb-6">
+                <Info className="w-6 h-6 text-[#005293] flex-shrink-0 mt-1" />
+                <p className="text-slate-700 leading-relaxed text-lg font-medium">
+                  {selectedDetail.expandedText || selectedDetail.text}
+                </p>
+              </div>
+              
+              <div className="pt-6 border-t border-slate-100 flex justify-end">
+                <button
+                  onClick={() => setSelectedDetail(null)}
+                  className="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl transition-colors"
+                >
+                  Close Detail
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Top Navigation Bar */}
+      <header className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-30 border-b border-slate-200">
+        <div className="flex h-2 w-full">
+          <div className="w-1/3 bg-[#005293]"></div> {/* Panama Blue */}
+          <div className="w-1/3 bg-white"></div>     {/* White */}
+          <div className="w-1/3 bg-[#CE1126]"></div> {/* Panama Red */}
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-3 group cursor-pointer">
+            <div className="p-2 bg-slate-100 rounded-lg group-hover:bg-blue-50 transition-colors">
+              <MapPin className="text-[#CE1126] w-7 h-7" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-black text-[#005293] leading-tight">Retire in Panama</h1>
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Expert Consultation Guide</p>
+            </div>
+          </div>
+          <button 
+            className="md:hidden p-2 rounded-md text-slate-600 hover:bg-slate-100 transition-colors"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-8">
+        
+        {/* Sidebar Navigation */}
+        <aside className={`md:w-1/4 lg:w-1/5 flex-shrink-0 ${isMobileMenuOpen ? 'block' : 'hidden'} md:block z-20`}>
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-28">
+            <div className="p-5 bg-gradient-to-br from-slate-50 to-white border-b border-slate-100">
+              <h2 className="text-sm font-black text-slate-800 uppercase tracking-wider">Explore Topics</h2>
+            </div>
+            <nav className="flex flex-col py-2">
+              {contentData.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-5 py-3.5 flex items-center justify-between transition-all duration-200 border-l-4 ${
+                    activeTab === item.id 
+                      ? 'bg-blue-50 border-[#005293] text-[#005293] shadow-inner' 
+                      : 'border-transparent text-slate-600 hover:bg-slate-50 hover:text-[#CE1126]'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className={`${activeTab === item.id ? 'text-[#005293]' : 'text-slate-400'}`}>
+                      {item.icon}
+                    </span>
+                    <span className={`font-medium ${activeTab === item.id ? 'font-bold' : ''}`}>{item.title}</span>
+                  </div>
+                  {activeTab === item.id && <ChevronRight className="w-4 h-4" />}
+                </button>
+              ))}
+            </nav>
+          </div>
+        </aside>
+
+        {/* Main Content Area */}
+        <main className="md:w-3/4 lg:w-4/5 min-h-[600px]">
+          <div key={animateKey} className="animate-fade-in-up bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+            
+            {/* Dynamic Hero Header */}
+            <div className="bg-gradient-to-br from-[#005293] to-blue-900 p-8 sm:p-12 text-white relative overflow-hidden">
+              {/* Decorative Background Elements */}
+              <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-4 -translate-y-8 scale-150">
+                {activeContent.icon}
+              </div>
+              <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/20 to-transparent"></div>
+              
+              <div className="relative z-10">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 bg-white/20 hover:bg-white/30 transition-colors backdrop-blur-md rounded-full text-sm font-semibold tracking-wide mb-4 shadow-sm cursor-default">
+                  {activeContent.icon}
+                  <span>{activeContent.title}</span>
+                </div>
+                <h2 className="text-4xl sm:text-5xl font-black mb-3 leading-tight tracking-tight">
+                  {activeContent.tagline}
+                </h2>
+              </div>
+            </div>
+
+            <div className="p-8 sm:p-12">
+              
+              {/* Intro Block */}
+              <div className="flex items-start space-x-4 mb-10">
+                <div className="hidden sm:flex flex-shrink-0 p-3 bg-blue-50 text-[#005293] rounded-full mt-1">
+                  <Info className="w-6 h-6" />
+                </div>
+                <p className="text-xl text-slate-700 leading-relaxed font-medium">
+                  {activeContent.intro}
+                </p>
+              </div>
+
+              {/* Grid Details - NOW INTERACTIVE */}
+              <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-2">
+                <h3 className="text-lg font-black text-slate-800 uppercase tracking-wide">Key Features</h3>
+                <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider bg-slate-100 px-2 py-1 rounded">Select a card to expand</span>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                {activeContent.details.map((detail, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={() => setSelectedDetail(detail)}
+                    className="text-left bg-slate-50 rounded-xl p-6 border border-slate-200 hover:border-[#005293] hover:shadow-lg transition-all duration-300 group relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 right-0 mt-4 mr-4 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
+                      <PlusCircle className="w-6 h-6 text-[#005293]" />
+                    </div>
+                    
+                    <h4 className="text-lg font-bold text-[#005293] mb-2 flex items-center pr-8">
+                      <ArrowRightCircle className="w-5 h-5 mr-2 text-[#CE1126]" />
+                      {detail.title}
+                    </h4>
+                    <p className="text-slate-600 leading-relaxed group-hover:text-slate-800 transition-colors">
+                      {detail.text}
+                    </p>
+                    <div className="mt-4 text-xs font-bold text-[#005293] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                      Click for Deep Dive
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Interactive Tools Injected based on context */}
+              {activeContent.id === 'costofliving' && <BudgetEstimator />}
+              {activeContent.id === 'visas' && <VisaCheck />}
+              {activeContent.id === 'resources' && <ResourceDirectory />}
+
+              {/* Deep Dive Callout */}
+              <div className="my-10 bg-slate-900 text-slate-100 rounded-2xl p-8 relative overflow-hidden shadow-lg">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full transform translate-x-10 -translate-y-10"></div>
+                <h3 className="text-sm uppercase tracking-widest text-slate-400 font-bold mb-3">Consultant's Overview</h3>
+                <p className="text-lg leading-relaxed italic border-l-4 border-[#CE1126] pl-4">
+                  "{activeContent.deepDive}"
+                </p>
+              </div>
+
+              {/* Premium Consultant's Advice / Mitigation Box */}
+              <div className="mt-12 bg-white rounded-2xl border-2 border-red-100 shadow-xl overflow-hidden relative">
+                <div className="bg-gradient-to-r from-red-50 to-white px-6 py-4 border-b border-red-100 flex items-center space-x-3">
+                  <div className="bg-[#CE1126] p-2 rounded-lg text-white shadow-sm">
+                    <AlertTriangle className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800">
+                    Real-World Reality Check
+                  </h3>
+                </div>
+                
+                <div className="p-6 sm:p-8 flex flex-col md:flex-row gap-8">
+                  {/* Challenge Side */}
+                  <div className="md:w-1/2 relative">
+                    <h4 className="text-xs font-black text-red-600 uppercase tracking-widest mb-3 flex items-center">
+                      <span className="w-2 h-2 bg-red-600 rounded-full mr-2"></span> The Challenge
+                    </h4>
+                    <p className="text-lg font-bold text-slate-800 mb-2">{activeContent.challenge}</p>
+                    <p className="text-slate-600 leading-relaxed">{activeContent.challengeDesc}</p>
+                  </div>
+                  
+                  {/* Mitigation Side */}
+                  <div className="md:w-1/2 bg-emerald-50 rounded-xl p-6 border border-emerald-100 relative">
+                    <div className="absolute top-0 right-0 p-3 opacity-20">
+                      <ShieldCheck className="w-12 h-12 text-emerald-600" />
+                    </div>
+                    <h4 className="text-xs font-black text-emerald-700 uppercase tracking-widest mb-3 flex items-center relative z-10">
+                      <span className="w-2 h-2 bg-emerald-600 rounded-full mr-2"></span> Mitigation Strategy
+                    </h4>
+                    <p className="text-slate-800 font-medium leading-relaxed relative z-10">
+                      {activeContent.mitigation}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Reference Links Section */}
+              {activeContent.referenceLinks && activeContent.referenceLinks.length > 0 && (
+                <div className="mt-12 pt-8 border-t-2 border-slate-100">
+                  <h3 className="text-xl font-black text-slate-800 mb-6 flex items-center uppercase tracking-wide">
+                    <BookOpen className="w-6 h-6 mr-3 text-[#005293]" />
+                    Additional Reference Material
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {activeContent.referenceLinks.map((link, idx) => (
+                      <a 
+                        key={idx} 
+                        href={link.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-start p-5 bg-white rounded-xl border border-slate-200 hover:border-[#005293] hover:shadow-md transition-all duration-300 group"
+                      >
+                        <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-[#CE1126] mr-3 flex-shrink-0 mt-0.5 transition-colors" />
+                        <span className="text-sm font-bold text-slate-600 group-hover:text-[#005293] leading-snug transition-colors">
+                          {link.name}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            </div>
+          </div>
+        </main>
+      </div>
+      
+      {/* Footer */}
+      <footer className="bg-slate-900 border-t-4 border-[#005293] text-slate-400 py-10 mt-12">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <MapPin className="w-8 h-8 mx-auto mb-4 text-[#CE1126]" />
+          <p className="font-semibold text-slate-300">Expert Panama Retirement Consultant</p>
+          <p className="text-sm mt-2">© {new Date().getFullYear()} Curated exclusively from authorized relocation materials.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
